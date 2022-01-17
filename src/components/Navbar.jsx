@@ -20,7 +20,7 @@ function Navbar() {
 			<nav className="navbarNav">
 				<ul className="navbarListItems">
 					<li
-						classname="navbarListItem"
+						className="navbarListItem"
 						onClick={() => navigate("/")}
 					>
 						<ExploreIcon
@@ -39,7 +39,7 @@ function Navbar() {
 						</p>
 					</li>
 					<li
-						classname="navbarListItem"
+						className="navbarListItem"
 						onClick={() => navigate("/offers")}
 					>
 						<OfferIcon
@@ -62,7 +62,7 @@ function Navbar() {
 						</p>
 					</li>
 					<li
-						classname="navbarListItem"
+						className="navbarListItem"
 						onClick={() => navigate("/profile")}
 					>
 						<PersonOutlineIcon

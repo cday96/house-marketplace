@@ -1,6 +1,8 @@
 import React from "react"
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { toast } from "react-toastify"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg"
 import visibilityIcon from "../assets/svg/visibilityIcon.svg"
 
@@ -25,6 +27,29 @@ function SignIn() {
 		}))
 	}
 
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+		try {
+			// Get the auth value
+			const auth = getAuth()
+
+			// Store the credentials in the promise in an object
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password
+			)
+
+			// Validate login and send user to homepage
+			if (userCredential.user) {
+				navigate("/")
+			}
+		} catch (error) {
+			// Use toast from ToastContainer in react-toastify library to emit error
+			toast.error("Incorrect Credentials")
+		}
+	}
+
 	return (
 		<div>
 			<div className="pageContainer">
@@ -32,7 +57,7 @@ function SignIn() {
 					<p className="pageHeader">Welcome!</p>
 				</header>
 				<main>
-					<form>
+					<form onSubmit={handleSubmit}>
 						<input
 							id="email"
 							className="emailInput"
@@ -67,7 +92,7 @@ function SignIn() {
 						</Link>
 						<div className="signInBar">
 							<p className="signInText">Sign In</p>
-							<button className="signInButton">
+							<button type="submit" className="signInButton">
 								<ArrowRightIcon
 									fill="#ffffff"
 									width="34px"
@@ -77,7 +102,7 @@ function SignIn() {
 						</div>
 					</form>
 					{/* Google OAuth Component goes here */}
-					<Link classname="registerLink" to="/sign-up">
+					<Link className="registerLink" to="/sign-up">
 						Register
 					</Link>
 				</main>
