@@ -7,6 +7,7 @@ import Profile from "./pages/Profile"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import ForgotPassword from "./pages/ForgotPassword"
+import PrivateRoute from "./components/PrivateRoute"
 
 import Navbar from "./components/Navbar"
 
@@ -17,8 +18,10 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Explore />} />
 					<Route path="/offers" element={<Offers />} />
-					{/* This will need to become a protected route */}
-					<Route path="/profile" element={<Profile />} />
+					<Route path="/profile" element={<PrivateRoute />}>
+						{/* Insert the desired Outlet Route inside the PrivateRoute Route*/}
+						<Route path="/profile" element={<Profile />} />
+					</Route>
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-up" element={<SignUp />} />
 					<Route
