@@ -8,6 +8,7 @@ import Profile from "./pages/Profile"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import ForgotPassword from "./pages/ForgotPassword"
+import CreateListing from "./pages/CreateListing"
 import PrivateRoute from "./components/PrivateRoute"
 
 import Navbar from "./components/Navbar"
@@ -29,6 +30,13 @@ function App() {
 					</Route>
 					<Route path="/sign-in" element={<SignIn />} />
 					<Route path="/sign-up" element={<SignUp />} />
+					<Route path="/create-listing" element={<PrivateRoute />}>
+						{/* Insert the desired Outlet Route inside the PrivateRoute Route*/}
+						<Route
+							path="/create-listing"
+							element={<CreateListing />}
+						/>
+					</Route>
 					<Route
 						path="/forgot-password"
 						element={<ForgotPassword />}
