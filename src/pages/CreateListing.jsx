@@ -65,10 +65,35 @@ function CreateListing() {
 	// 	}
 	// }, [isMounted])
 
-	const onMutate = (e) => {}
+	const onMutate = (e) => {
+		let boolean = null
+
+		if (e.target.value === "true") {
+			boolean = true
+		}
+		if (e.target.value === "false") {
+			boolean = false
+		}
+
+		// Files
+		if (e.target.files) {
+			setFormData((prevState) => ({
+				...prevState,
+				images: e.target.files,
+			}))
+		}
+		// Text/Boolean/Numbers
+		if (!e.target.files) {
+			setFormData((prevState) => ({
+				...prevState,
+				[e.target.id]: boolean ?? e.target.value,
+			}))
+		}
+	}
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		console.log(formData)
 	}
 
 	if (loading) {
@@ -92,7 +117,7 @@ function CreateListing() {
 							}
 							type="button"
 							id="type"
-							valuee="sale"
+							value="sale"
 							onClick={onMutate}
 						>
 							Sell
@@ -161,7 +186,7 @@ function CreateListing() {
 							value={true}
 							max="50"
 							min="1"
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							Yes
 						</button>
@@ -176,7 +201,7 @@ function CreateListing() {
 							value={false}
 							max="50"
 							min="1"
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							No
 						</button>
@@ -190,7 +215,7 @@ function CreateListing() {
 							type="button"
 							id="furnished"
 							value={true}
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							Yes
 						</button>
@@ -203,7 +228,7 @@ function CreateListing() {
 							type="button"
 							id="furnished"
 							value={false}
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							No
 						</button>
@@ -252,7 +277,7 @@ function CreateListing() {
 							type="button"
 							id="offer"
 							value={true}
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							Yes
 						</button>
@@ -265,7 +290,7 @@ function CreateListing() {
 							type="button"
 							id="offer"
 							value={false}
-							onChange={onMutate}
+							onClick={onMutate}
 						>
 							No
 						</button>
@@ -310,9 +335,9 @@ function CreateListing() {
 					<input
 						className="formInputFile"
 						type="file"
-						im="images"
+						id="images"
 						max="5"
-						accept=".lpg,.png,.jpeg"
+						accept=".jpg,.png,.jpeg"
 						multiple
 						required
 						onChange={onMutate}
