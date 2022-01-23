@@ -1,7 +1,16 @@
 import React from "react"
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
+import {
+	ref,
+	getStorage,
+	getDownloadURL,
+	uploadBytesResumable,
+} from "firebase/storage"
+import { db } from "../firebase.config"
+import { v4 as uuidv4 } from "uuid"
 import Spinner from "../components/Spinner"
 
 function CreateListing() {
@@ -10,7 +19,7 @@ function CreateListing() {
 
 	const navigate = useNavigate()
 
-	const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+	const [geolocationEnabled, setGeolocationEnabled] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState({
 		type: "rent",
@@ -91,9 +100,111 @@ function CreateListing() {
 		}
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		console.log(formData)
+
+		setLoading(true)
+
+		if (discountedPrice >= regularPrice) {
+			setLoading(false)
+			toast.error("Discounted Price Must Be Less Than Regular Price")
+			return
+		}
+
+		if (images.length > 6) {
+			setLoading(false)
+			toast.error("Max 5 Images Allowed")
+			return
+		}
+
+		// Enable geolocating functionality
+		let geolocation = {}
+		let location
+
+		if (geolocationEnabled) {
+			const res = await fetch(
+				`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+			)
+
+			const data = await res.json()
+
+			geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
+			geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
+			location =
+				data.status === "ZERO_RESULTS"
+					? undefined
+					: data.results[0]?.formatted_address
+			if (location === undefined || location.includes("undefined")) {
+				setLoading(false)
+				toast.error("Please Enter a Correct Address")
+				return
+			}
+		} else {
+			geolocation.lat = latitude
+			geolocation.lng = longitude
+			location = address
+		}
+
+		// Sotre Images in Firebase
+		const storeImage = async (image) => {
+			return new Promise((resolve, reject) => {
+				// First create and name a file to reference in storage
+				const storage = getStorage()
+				const fileName = `${auth.currentUser.uid}-${
+					image.name
+				}-${uuidv4()}`
+
+				const storageRef = ref(storage, "images/" + fileName)
+
+				// Second, create and upload task for the file in storage ref
+				const uploadTask = uploadBytesResumable(storageRef, image)
+
+				uploadTask.on(
+					"state_changed",
+					(snapshot) => {
+						// Observe state change events such as progress, pause, resume
+						// Get task progress
+						const progress =
+							(snapshot.bytesTransferred / snapshot.totalBytes) *
+							100
+						console.log("Upload is " + progress + "% done")
+						switch (snapshot.state) {
+							case "paused":
+								console.log("Upload puased")
+								break
+							case "running":
+								console.log("Upload running")
+								break
+						}
+					},
+					(error) => {
+						// Handle unsuccessful uploads with reject from our Promise
+						reject(error)
+					},
+					() => {
+						// Handle successful uploads with resolve from our Promise
+						getDownloadURL(uploadTask.snapshot.ref).then(
+							(downloadURL) => {
+								resolve(downloadURL)
+							}
+						)
+					}
+				)
+			})
+		}
+
+		// Call the storeImage function for each image uploaded
+		const imageUrls = await Promise.all(
+			[...images].map((image) => storeImage(image))
+		).catch(() => {
+			setLoading(false)
+			toast.error("Images Could Not Be Uploaded")
+			return
+		})
+
+		console.log(imageUrls)
+
+		setLoading(false)
 	}
 
 	if (loading) {
