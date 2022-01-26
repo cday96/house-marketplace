@@ -7,6 +7,7 @@ import Category from "./pages/Category"
 import Profile from "./pages/Profile"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
+import Listing from "./pages/Listing"
 import ForgotPassword from "./pages/ForgotPassword"
 import CreateListing from "./pages/CreateListing"
 import PrivateRoute from "./components/PrivateRoute"
@@ -23,6 +24,10 @@ function App() {
 					<Route
 						path="/category/:categoryName"
 						element={<Category />}
+					/>
+					<Route
+						path="/category/:categoryName/:listingId"
+						element={<Listing />}
 					/>
 					<Route path="/profile" element={<PrivateRoute />}>
 						{/* Insert the desired Outlet Route inside the PrivateRoute Route*/}
