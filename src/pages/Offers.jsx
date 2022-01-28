@@ -17,6 +17,7 @@ import Spinner from "../components/Spinner"
 function Offers() {
 	const [listings, setListings] = useState(null)
 	const [loading, setLoading] = useState(true)
+	const [lastFetchedListing, setLastFetchedListing] = useState(null)
 
 	useEffect(() => {
 		const fetchListings = async () => {
@@ -35,6 +36,10 @@ function Offers() {
 
 				// Execute query to get data with Doc snapshot
 				const querySnap = await getDocs(q)
+
+				// Get the last fetched listing for pagination to be used
+				const lastVisible = querySnap.docs[querySnap.docs.length - 1]
+				setLastFetchedListing(lastVisible)
 
 				let listings = []
 
@@ -55,6 +60,47 @@ function Offers() {
 		}
 		fetchListings()
 	}, [])
+
+	// Pagination and load more
+	const handleFetchMoreListings = async () => {
+		try {
+			// Get reference to listings collection
+			const listingsRef = collection(db, "listings")
+
+			// Create query on collection with constructed with the where fn
+			// Use where to construct query with offer == true
+			const q = query(
+				listingsRef,
+				where("offer", "==", true),
+				orderBy("timestamp", "desc"),
+				startAfter(lastFetchedListing),
+				limit(10)
+			)
+
+			// Execute query to get data with Doc snapshot
+			const querySnap = await getDocs(q)
+
+			// Get the last fetched listing for pagination to be used
+			const lastVisible = querySnap.docs[querySnap.docs.length - 1]
+			setLastFetchedListing(lastVisible)
+
+			let listings = []
+
+			// Populate the listings array with the data in the querySnap
+			querySnap.forEach((doc) => {
+				// console.log(doc.data())
+				return listings.push({
+					id: doc.id,
+					data: doc.data(),
+				})
+			})
+			// Set listings state to spread across the prev listings array we pushed and set loading to false once complete
+			setListings((prevState) => [...prevState, ...listings])
+			setLoading(false)
+		} catch (error) {
+			toast.error("Could Not Fetch Listings")
+		}
+	}
 
 	return (
 		<div className="category">
@@ -77,6 +123,16 @@ function Offers() {
 							))}
 						</ul>
 					</main>
+					<br />
+					<br />
+					{lastFetchedListing && (
+						<p
+							className="loadMore"
+							onClick={handleFetchMoreListings}
+						>
+							Load More
+						</p>
+					)}
 				</div>
 			) : (
 				<p>No Offers</p>
