@@ -88,6 +88,9 @@ function Profile() {
 		}
 	}
 
+	const handleEdit = (listingId) => {
+		navigate(`/edit-listing/${listingId}`)
+	}
 	// Send updated Profile name info to firebase
 	const onSubmit = async () => {
 		try {
@@ -168,6 +171,7 @@ function Profile() {
 									listing={data}
 									id={id}
 									onDelete={() => handleDelete(id)}
+									onEdit={() => handleEdit(id)}
 								/>
 							))}
 						</ul>

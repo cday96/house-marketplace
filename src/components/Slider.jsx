@@ -41,6 +41,11 @@ function Slider() {
 	if (loading) {
 		return <Spinner />
 	}
+
+	if (listings.length === 0) {
+		return <div></div>
+	}
+
 	return (
 		listings && (
 			<div>

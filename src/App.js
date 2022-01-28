@@ -11,6 +11,7 @@ import Listing from "./pages/Listing"
 import Contact from "./pages/Contact"
 import ForgotPassword from "./pages/ForgotPassword"
 import CreateListing from "./pages/CreateListing"
+import EditListing from "./pages/EditListing"
 import PrivateRoute from "./components/PrivateRoute"
 
 import Navbar from "./components/Navbar"
@@ -41,6 +42,16 @@ function App() {
 						<Route
 							path="/create-listing"
 							element={<CreateListing />}
+						/>
+					</Route>
+					<Route
+						path="/edit-listing/:listingId"
+						element={<PrivateRoute />}
+					>
+						{/* Insert the desired Outlet Route inside the PrivateRoute Route*/}
+						<Route
+							path="/edit-listing/:listingId"
+							element={<EditListing />}
 						/>
 					</Route>
 					<Route path="/contact/:landlordId" element={<Contact />} />
