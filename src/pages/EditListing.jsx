@@ -1,5 +1,5 @@
 import React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { getAuth } from "firebase/auth"
@@ -20,7 +20,7 @@ function EditListing() {
 
 	const navigate = useNavigate()
 	const params = useParams()
-
+	// eslint-disable-next-line
 	const [geolocationEnabled, setGeolocationEnabled] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [listing, setListing] = useState(null)
@@ -187,6 +187,8 @@ function EditListing() {
 								break
 							case "running":
 								console.log("Upload running")
+								break
+							default:
 								break
 						}
 					},

@@ -1,8 +1,8 @@
 import React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { getAuth } from "firebase/auth"
 import {
 	ref,
 	getStorage,
@@ -19,7 +19,7 @@ function CreateListing() {
 	const auth = getAuth()
 
 	const navigate = useNavigate()
-
+	// eslint-disable-next-line
 	const [geolocationEnabled, setGeolocationEnabled] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState({
@@ -174,6 +174,8 @@ function CreateListing() {
 								break
 							case "running":
 								console.log("Upload running")
+								break
+							default:
 								break
 						}
 					},
