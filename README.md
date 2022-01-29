@@ -106,3 +106,48 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Packages
+
+You will need to install
+
+### React Toastify
+
+Toastify is used for success and error message display.
+
+Install with `npm i react-toastify`
+
+### Leaflet
+
+You will need Leaflet for the display of the map for the listing locations.
+
+Include Leaflet CSS file in the head section of your index.html document:
+
+```
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+```
+
+Install with `npm i leaflet` and `npm i react-leaflet`
+
+**Note: If encountering an error when import from leaflet follow: `https://stackoverflow.com/questions/67552020/how-to-fix-error-failed-to-compile-node-modules-react-leaflet-core-esm-pat`**
+
+### Swiper
+
+Swiper is utilized for the scrolling image slider.
+
+To get started install with `npm i swiper@6.8.1`
+
+### UUID
+
+UUID is used to assign unique Ids where needed
+
+To install `npm i uuid`
+
+**Note: To import must import as below:**
+
+```
+import { v4 as uuidv4 } from 'uuid';
+uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+```
